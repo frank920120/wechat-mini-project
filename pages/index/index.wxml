@@ -1,4 +1,3 @@
-<view>
-  首页
-  <text class="iconfont icon-receipt-address" selectable="false" space="false" decode="false"></text>
+<view class="pyg_index">
+<SearchInput/>
 </view>
