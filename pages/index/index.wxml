@@ -9,4 +9,9 @@
             </swiper-item>
         </swiper>
     </view>
+    <view class="index_cate">
+        <navigator wx:for="{{categories}}" wx:key="name" open -type="navigate">
+            <image mode='widthFix' src="{{item.image_src}}" />
+        </navigator>
+    </view>
 </view>
