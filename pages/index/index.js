@@ -1,18 +1,17 @@
 //Page Object
+import { request } from "../../request/index";
 Page({
   data: {
     swipeList: [],
   },
   //options(Object)
   onLoad(option) {
-    wx.request({
+    request({
       url: "https://api-hmugo-web.itheima.net/api/public/v1/home/swiperdata",
-      success: (result) => {
-        console.log(result);
-        this.setData({
-          swipeList: result.data.message,
-        });
-      },
+    }).then((res) => {
+      this.setData({
+        swipeList: res.data.message,
+      });
     });
   },
 });
