@@ -1,3 +1,6 @@
-view {
-  color: var(--themeColor);
+.index-swiper swiper {
+  height: 340rpx;
+}
+.index-swiper swiper image {
+  width: 100%;
 }
