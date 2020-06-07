@@ -1,1 +1,4 @@
-<view class="" hover-class="none" hover-stop-propagation="false">首页</view>
+<view>
+  首页
+  <text class="iconfont icon-receipt-address" selectable="false" space="false" decode="false"></text>
+</view>
