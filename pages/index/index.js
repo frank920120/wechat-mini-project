@@ -4,6 +4,7 @@ Page({
   data: {
     swipeList: [],
     categories: [],
+    floors: [],
   },
   //options(Object)
   onLoad(option) {
@@ -11,6 +12,8 @@ Page({
     this.getSwiperList();
     // request category
     this.getCategories();
+    // request floor
+    this.getFloors();
   },
   getSwiperList() {
     request({
@@ -27,6 +30,15 @@ Page({
     }).then((res) => {
       this.setData({
         categories: res.data.message,
+      });
+    });
+  },
+  getFloors() {
+    request({
+      url: "https://api-hmugo-web.itheima.net/api/public/v1/home/floordata",
+    }).then((res) => {
+      this.setData({
+        floors: res.data.message,
       });
     });
   },
