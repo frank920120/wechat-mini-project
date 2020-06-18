@@ -27,12 +27,14 @@
     }
   }
   .floor_list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10rpx;
     navigator {
-      float: left;
-      width: 33.33%;
-      padding: 5rpx;
-      &:nth-last-child(-n + 4) {
-        height: 33.33vw * 386/232/2;
+      &:first-child {
+        grid-row: 1/2;
+        grid-column: 1/2;
       }
       image {
         width: 100%;

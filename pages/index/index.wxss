@@ -17,13 +17,14 @@
 .index_floor .floor_group .floor_title image {
   width: 100%;
 }
-.index_floor .floor_list navigator {
-  float: left;
-  width: 33.33%;
-  padding: 5rpx;
+.index_floor .floor_list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 10rpx;
 }
-.index_floor .floor_list navigator:nth-last-child(-n + 4) {
-  height: 27.72711207vw;
+.index_floor .floor_list navigator:first-child {
+  grid-row: 1/3;
 }
 .index_floor .floor_list navigator image {
   width: 100%;
