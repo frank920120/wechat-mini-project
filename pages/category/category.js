@@ -5,10 +5,19 @@ Page({
     categories: [],
     leftMenuList: [],
     rightContent: [],
+    currentindex: 0,
   },
 
-  onLoad: function (options) {
+  onLoad: function () {
     this.getCate();
+  },
+  handleClick(data) {
+    let { currentindex } = data.currentTarget.dataset;
+    let rightContent = this.data.categories[currentindex].children;
+    this.setData({
+      currentindex,
+      rightContent,
+    });
   },
   getCate() {
     request({
