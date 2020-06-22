@@ -6,6 +6,7 @@ Page({
     leftMenuList: [],
     rightContent: [],
     currentindex: 0,
+    scrollTop: 0,
   },
 
   onLoad: function () {
@@ -26,6 +27,7 @@ Page({
             this.setData({
               leftMenuList,
               rightContent,
+              scrollTop: 0,
             });
           }
         );
@@ -38,6 +40,7 @@ Page({
     this.setData({
       currentindex,
       rightContent,
+      scrollTop: 0,
     });
   },
   getCate() {
