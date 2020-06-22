@@ -15,31 +15,26 @@ Page({
     // request floor
     this.getFloors();
   },
-  getSwiperList() {
-    request({
-      url: "/home/swiperdata",
-    }).then((res) => {
-      this.setData({
-        swipeList: res.data.message,
-      });
+  async getSwiperList() {
+    const res = await request({ url: "/home/swiperdata" });
+    this.setData({
+      swipeList: res.data.message,
     });
   },
-  getCategories() {
-    request({
+  async getCategories() {
+    const res = await request({
       url: "/home/catitems",
-    }).then((res) => {
-      this.setData({
-        categories: res.data.message,
-      });
+    });
+    this.setData({
+      categories: res.data.message,
     });
   },
-  getFloors() {
-    request({
+  async getFloors() {
+    const res = await request({
       url: "/home/floordata",
-    }).then((res) => {
-      this.setData({
-        floors: res.data.message,
-      });
+    });
+    this.setData({
+      floors: res.data.message,
     });
   },
 });

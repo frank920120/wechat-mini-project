@@ -43,27 +43,26 @@ Page({
       scrollTop: 0,
     });
   },
-  getCate() {
-    request({
+  async getCate() {
+    const res = await request({
       url: "/categories",
-    }).then((res) => {
-      this.setData(
-        {
-          categories: res.data.message,
-        },
-        () => {
-          wx.setStorageSync("cates", {
-            time: Date.now(),
-            data: this.data.categories,
-          });
-          let leftMenuList = this.data.categories.map((v) => v.cat_name);
-          let rightContent = this.data.categories[0].children;
-          this.setData({
-            leftMenuList,
-            rightContent,
-          });
-        }
-      );
     });
+    this.setData(
+      {
+        categories: res.data.message,
+      },
+      () => {
+        wx.setStorageSync("cates", {
+          time: Date.now(),
+          data: this.data.categories,
+        });
+        let leftMenuList = this.data.categories.map((v) => v.cat_name);
+        let rightContent = this.data.categories[0].children;
+        this.setData({
+          leftMenuList,
+          rightContent,
+        });
+      }
+    );
   },
 });
