@@ -1,2 +1,2 @@
 <SearchInput></SearchInput>
-<Tabs tabs="{{tabs}}" bindhandleTabsTap="handleTabsTap"></Tabs>
+<Tabs tabs="{{tabs}}" goodsList="{{goodsList}}" bindhandleTabsTap="handleTabsTap"></Tabs>

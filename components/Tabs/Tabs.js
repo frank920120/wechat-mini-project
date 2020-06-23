@@ -8,6 +8,10 @@ Component({
       type: Array,
       value: [],
     },
+    goodsList: {
+      type: Object,
+      value: {},
+    },
   },
 
   /**

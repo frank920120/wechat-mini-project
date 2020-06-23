@@ -1,4 +1,5 @@
 // pages/goods_list/goods_list.js
+import { request } from "../../request/index";
 Page({
   data: {
     tabs: [
@@ -6,10 +7,27 @@ Page({
       { id: 1, value: "销量", isActive: false },
       { id: 2, value: "价格", isActive: false },
     ],
+    goodsList: [],
   },
-
+  QueryParams: {
+    query: "",
+    cid: "",
+    pagenum: 1,
+    pagesize: 10,
+  },
   onLoad: function (options) {
-    console.log(options);
+    this.QueryParams.cid = options.cid;
+    this.getGoodList();
+  },
+  async getGoodList() {
+    const res = await request({
+      url: "/goods/search",
+      data: this.QueryParams,
+    });
+    this.setData({
+      goodsList: res.data.message,
+    });
+    console.log(res);
   },
   handleTabsTap(e) {
     const id = e.detail;
