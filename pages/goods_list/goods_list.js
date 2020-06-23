@@ -30,7 +30,7 @@ Page({
     this.setData({
       goodsList: [...this.data.goodsList, ...res.data.message.goods],
     });
-    console.log(res.data.message);
+    wx.stopPullDownRefresh();
   },
   handleTabsTap(e) {
     const id = e.detail;
@@ -55,11 +55,10 @@ Page({
     }
   },
   onPullDownRefresh() {
-    this.QueryParams = {
-      ...this.QueryParams,
-      pagenum: 1,
-      pagesize: 10,
-    };
+    this.setData({
+      goodsList: [],
+    });
+    this.QueryParams.pagenum = 1;
     this.getGoodList();
   },
 });
