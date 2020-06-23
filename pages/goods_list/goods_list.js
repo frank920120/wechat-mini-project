@@ -15,6 +15,7 @@ Page({
     pagenum: 1,
     pagesize: 10,
   },
+  totalPages: 1,
   onLoad: function (options) {
     this.QueryParams.cid = options.cid;
     this.getGoodList();
@@ -24,10 +25,12 @@ Page({
       url: "/goods/search",
       data: this.QueryParams,
     });
+    const total = res.data.message.total;
+    this.totalPages = Math.ceil(total / this.QueryParams.pagesize);
     this.setData({
-      goodsList: res.data.message,
+      goodsList: [...this.data.goodsList, ...res.data.message.goods],
     });
-    console.log(res);
+    console.log(res.data.message);
   },
   handleTabsTap(e) {
     const id = e.detail;
@@ -40,5 +43,23 @@ Page({
     this.setData({
       tabs: newTabs,
     });
+  },
+  onReachBottom() {
+    if (this.QueryParams.pagenum >= this.totalPages) {
+      wx.showToast({
+        title: "没有下一页数据",
+      });
+    } else {
+      this.QueryParams.pagenum++;
+      this.getGoodList();
+    }
+  },
+  onPullDownRefresh() {
+    this.QueryParams = {
+      ...this.QueryParams,
+      pagenum: 1,
+      pagesize: 10,
+    };
+    this.getGoodList();
   },
 });
