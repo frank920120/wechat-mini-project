@@ -1,6 +1,6 @@
 <view class="detail_swiper">
     <swiper autoplay="{{true}}" circular="{{true}}" indicator-dots="{{true}}">
-        <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="pics_id">
+        <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="pics_id" bindtap="handlePreview" data-index="{{index}}">
             <image mode="widthFix" src="{{item.pics_mid}}"></image>
         </swiper-item>
     </swiper>

@@ -33,4 +33,11 @@ Page({
       isCollect: !this.data.isCollect,
     });
   },
+  handlePreview(e) {
+    const urls = this.data.goodsDetail.pics.map((pic) => pic.pics_mid);
+    wx.previewImage({
+      current: urls[e.currentTarget.dataset.index],
+      urls,
+    });
+  },
 });
