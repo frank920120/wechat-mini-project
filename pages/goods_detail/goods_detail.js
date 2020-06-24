@@ -5,6 +5,7 @@ Page({
    */
   data: {
     goodsDetail: {},
+    isCollect: false,
   },
 
   /**
@@ -19,6 +20,11 @@ Page({
 
     this.setData({
       goodsDetail: res.data.message,
+    });
+  },
+  handleCollect() {
+    this.setData({
+      isCollect: !this.data.isCollect,
     });
   },
 });
