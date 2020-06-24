@@ -17,9 +17,15 @@ Page({
   },
   async getGoodsDetail(id) {
     const res = await request({ url: "/goods/detail", data: { goods_id: id } });
-
+    let { goods_name, goods_price, goods_introduce, pics } = res.data.message;
+    goods_introduce = goods_introduce.replace(/\.webp/g, ".jpg");
     this.setData({
-      goodsDetail: res.data.message,
+      goodsDetail: {
+        goods_name,
+        goods_price,
+        goods_introduce,
+        pics,
+      },
     });
   },
   handleCollect() {
