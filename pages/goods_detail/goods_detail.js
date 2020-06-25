@@ -5,6 +5,7 @@ Page({
    */
   data: {
     goodsDetail: {},
+    goodsDetailAll: {},
     isCollect: false,
   },
 
@@ -26,6 +27,7 @@ Page({
         goods_introduce,
         pics,
       },
+      goodsDetailAll: res.data.message,
     });
   },
   handleCollect() {
@@ -38,6 +40,28 @@ Page({
     wx.previewImage({
       current: urls[e.currentTarget.dataset.index],
       urls,
+    });
+  },
+  handleCartAdd() {
+    let cart = wx.getStorageSync("cart") || [];
+    let index = cart.findIndex(
+      (v) => v.goods_id === this.data.goodsDetailAll.goods_id
+    );
+    if (index == -1) {
+      this.setData({
+        goodsDetailAll: { ...this.data.goodsDetailAll, num: 1 },
+      });
+      cart.push(this.data.goodsDetailAll);
+    } else {
+      cart[index].num++;
+    }
+
+    wx.setStorageSync("cart", cart);
+    wx.showToast({
+      title: "加入成功",
+      icon: "success",
+      duration: 1500,
+      mask: true,
     });
   },
 });
