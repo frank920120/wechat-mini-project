@@ -68,9 +68,12 @@ Page({
   data: {
     isAddress: false,
     addressDetail: null,
+    carts: [],
+    totalPrice: 0,
   },
   onShow() {
     const addressDetail = wx.getStorageSync("address");
+    const carts = wx.getStorageSync("cart");
     if (addressDetail) {
       this.setData({
         isAddress: true,
@@ -81,6 +84,10 @@ Page({
         isAddress: false,
       });
     }
+    this.setData({
+      carts,
+    });
+    this.getTotalPrice();
   },
   async handleUserAddress() {
     try {
@@ -99,5 +106,90 @@ Page({
     } catch (error) {
       console.log(error);
     }
+  },
+  handleSingleItemCheck(e) {
+    const { id } = e.currentTarget.dataset;
+    let updateCheck = this.data.carts.map((cart) => {
+      if (cart.goods_id === id) {
+        return { ...cart, checked: !cart.checked };
+      }
+      return { ...cart };
+    });
+    this.setData(
+      {
+        carts: updateCheck,
+      },
+      () => {
+        wx.setStorageSync("cart", this.data.carts);
+        this.getTotalPrice();
+      }
+    );
+  },
+  handleDecrease(e) {
+    const { id } = e.currentTarget.dataset;
+    let updatedNum = this.data.carts.map((cart) => {
+      if (cart.goods_id === id) {
+        if (cart.num === 1) {
+          cart.num = 1;
+        } else {
+          cart.num--;
+        }
+        return { ...cart, num: cart.num };
+      }
+      return { ...cart };
+    });
+    this.setData(
+      {
+        carts: updatedNum,
+      },
+      () => {
+        wx.setStorageSync("cart", this.data.carts);
+        this.getTotalPrice();
+      }
+    );
+  },
+  handleIncrease(e) {
+    const { id } = e.currentTarget.dataset;
+    let updatedNum = this.data.carts.map((cart) => {
+      if (cart.goods_id === id) {
+        cart.num++;
+        return { ...cart, num: cart.num };
+      }
+      return { ...cart };
+    });
+    this.setData(
+      {
+        carts: updatedNum,
+      },
+      () => {
+        wx.setStorageSync("cart", this.data.carts);
+        this.getTotalPrice();
+      }
+    );
+  },
+  getTotalPrice() {
+    console.log(this.data.carts);
+    const totalPrice = this.data.carts
+      .filter((cart) => cart.checked)
+      .reduce((prev, next) => {
+        return prev + next.goods_price * next.num;
+      }, 0);
+    this.setData({
+      totalPrice,
+    });
+  },
+  handleItemAllCheck() {
+    let checkedAll = this.data.carts.map((cart) => {
+      return { ...cart, checked: !cart.checked };
+    });
+    this.setData(
+      {
+        carts: checkedAll,
+      },
+      () => {
+        wx.setStorageSync("cart", this.data.carts);
+        this.getTotalPrice();
+      }
+    );
   },
 });
