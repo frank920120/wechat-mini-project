@@ -65,7 +65,7 @@ Page({
     );
     if (index == -1) {
       this.setData({
-        goodsDetailAll: { ...this.data.goodsDetailAll, num: 1, checked: false },
+        goodsDetailAll: { ...this.data.goodsDetailAll, num: 1, checked: true },
       });
       cart.push(this.data.goodsDetailAll);
     } else {

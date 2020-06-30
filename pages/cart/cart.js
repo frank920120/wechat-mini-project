@@ -70,10 +70,11 @@ Page({
     addressDetail: null,
     carts: [],
     totalPrice: 0,
+    allChecked: true,
   },
   onShow() {
     const addressDetail = wx.getStorageSync("address");
-    const carts = wx.getStorageSync("cart");
+    const carts = wx.getStorageSync("cart") || [];
     if (addressDetail) {
       this.setData({
         isAddress: true,
@@ -185,6 +186,7 @@ Page({
     this.setData(
       {
         carts: checkedAll,
+        allChecked: !this.data.allChecked,
       },
       () => {
         wx.setStorageSync("cart", this.data.carts);
