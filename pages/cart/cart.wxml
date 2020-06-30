@@ -1,5 +1,14 @@
 <view class="receive_address_row">
     <view class="address_btn">
-        <button type='primary' plain>获取收货地址</button>
+        <button wx:if="{{!isAddress}}" type='primary' plain bindtap='handleUserAddress'>
+            获取收货地址
+        </button>
+        <view wx:else class="user_info_row">
+            <view class="user_info">
+                <view>{{addressDetail.userName}}</view>
+                <view>{{addressDetail.all}}</view>
+            </view>
+            <view class="user_phone">{{addressDetail.telNumber}}</view>
+        </view>
     </view>
 </view>
