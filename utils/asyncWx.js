@@ -36,3 +36,18 @@ export const openSetting = () => {
     });
   });
 };
+
+export const showToast = ({ content }) => {
+  return new Promise((resolve, reject) => {
+    wx.showToast({
+      title: content,
+      icon: "none",
+      success: (result) => {
+        resolve(result);
+      },
+      fail: (result) => {
+        reject(result);
+      },
+    });
+  });
+};

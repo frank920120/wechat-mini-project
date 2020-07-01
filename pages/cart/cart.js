@@ -63,7 +63,12 @@
   2 判断用户有没有选购商品
   3 经过以上的验证 跳转到 支付页面！ 
  */
-import { getSetting, openSetting, chooseAddress } from "../../utils/asyncWx";
+import {
+  getSetting,
+  openSetting,
+  chooseAddress,
+  showToast,
+} from "../../utils/asyncWx";
 Page({
   data: {
     isAddress: false,
@@ -120,31 +125,24 @@ Page({
     const { id, operation } = e.currentTarget.dataset;
     let updatedNum = this.data.carts.map((cart) => {
       if (cart.goods_id === id) {
-        if (operation === -1) {
-          if (cart.num === 1) {
-            wx.showModal({
-              title: "提示",
-              content: "是否要删除该物品",
-              showCancel: true,
-              cancelText: "取消",
-              cancelColor: "#000000",
-              confirmText: "确定",
-              confirmColor: "#3CC51F",
-              success: (result) => {
-                if (result.confirm) {
-                  let deleteCart = this.data.carts.filter(
-                    (cart) => cart.goods_id !== id
-                  );
-                  this.updateCart(deleteCart);
-                }
-              },
-              fail: () => {
-                cart.num = 1;
-              },
-            });
-          } else {
-            cart.num = cart.num + operation;
-          }
+        if (operation === -1 && cart.num === 1) {
+          wx.showModal({
+            title: "提示",
+            content: "是否要删除该物品",
+            showCancel: true,
+            cancelText: "取消",
+            cancelColor: "#000000",
+            confirmText: "确定",
+            confirmColor: "#3CC51F",
+            success: (result) => {
+              if (result.confirm) {
+                let deleteCart = this.data.carts.filter(
+                  (cart) => cart.goods_id !== id
+                );
+                this.updateCart(deleteCart);
+              }
+            },
+          });
         } else {
           cart.num = cart.num + operation;
         }
@@ -155,23 +153,18 @@ Page({
     });
     this.updateCart(updatedNum);
   },
-  // handleIncrease(e) {
-  //   const { id } = e.currentTarget.dataset;
-  //   let updatedNum = this.data.carts.map((cart) => {
-  //     if (cart.goods_id === id) {
-  //       cart.num++;
-  //       return { ...cart, num: cart.num };
-  //     }
-  //     return { ...cart };
-  //   });
-  //   this.updateCart(updatedNum);
-  // },
+  getTotalNum() {
+    const totalNum = this.data.carts
+      .filter((cart) => cart.checked)
+      .reduce((prev, next) => prev + next.num, 0);
+    this.setData({
+      totalNum,
+    });
+  },
   getTotalPrice() {
     const totalPrice = this.data.carts
       .filter((cart) => cart.checked)
-      .reduce((prev, next) => {
-        return prev + next.goods_price * next.num;
-      }, 0);
+      .reduce((prev, next) => prev + next.goods_price * next.num, 0);
     this.setData({
       totalPrice,
     });
@@ -192,12 +185,23 @@ Page({
     this.setData(
       {
         carts: cart,
-        totalNum: cart.length,
       },
       () => {
         wx.setStorageSync("cart", this.data.carts);
         this.getTotalPrice();
+        this.getTotalNum();
       }
     );
+  },
+  async handlePay() {
+    const { isAddress, totalNum } = this.data;
+    if (!isAddress || totalNum == 0) {
+      await showToast({ content: "没有选择地址或者产品" });
+    } else {
+      wx.navigateTo({
+        url: "/pages/pay/pay",
+        success: (result) => {},
+      });
+    }
   },
 });
