@@ -71,6 +71,7 @@ Page({
     carts: [],
     totalPrice: 0,
     allChecked: true,
+    totalNum: 0,
   },
   onShow() {
     const addressDetail = wx.getStorageSync("address");
@@ -85,10 +86,7 @@ Page({
         isAddress: false,
       });
     }
-    this.setData({
-      carts,
-    });
-    this.getTotalPrice();
+    this.updateCart(carts);
   },
   async handleUserAddress() {
     try {
@@ -116,60 +114,59 @@ Page({
       }
       return { ...cart };
     });
-    this.setData(
-      {
-        carts: updateCheck,
-      },
-      () => {
-        wx.setStorageSync("cart", this.data.carts);
-        this.getTotalPrice();
-      }
-    );
+    this.updateCart(updateCheck);
   },
-  handleDecrease(e) {
-    const { id } = e.currentTarget.dataset;
+  handleEditor(e) {
+    const { id, operation } = e.currentTarget.dataset;
     let updatedNum = this.data.carts.map((cart) => {
       if (cart.goods_id === id) {
-        if (cart.num === 1) {
-          cart.num = 1;
+        if (operation === -1) {
+          if (cart.num === 1) {
+            wx.showModal({
+              title: "提示",
+              content: "是否要删除该物品",
+              showCancel: true,
+              cancelText: "取消",
+              cancelColor: "#000000",
+              confirmText: "确定",
+              confirmColor: "#3CC51F",
+              success: (result) => {
+                if (result.confirm) {
+                  let deleteCart = this.data.carts.filter(
+                    (cart) => cart.goods_id !== id
+                  );
+                  this.updateCart(deleteCart);
+                }
+              },
+              fail: () => {
+                cart.num = 1;
+              },
+            });
+          } else {
+            cart.num = cart.num + operation;
+          }
         } else {
-          cart.num--;
+          cart.num = cart.num + operation;
         }
+
         return { ...cart, num: cart.num };
       }
       return { ...cart };
     });
-    this.setData(
-      {
-        carts: updatedNum,
-      },
-      () => {
-        wx.setStorageSync("cart", this.data.carts);
-        this.getTotalPrice();
-      }
-    );
+    this.updateCart(updatedNum);
   },
-  handleIncrease(e) {
-    const { id } = e.currentTarget.dataset;
-    let updatedNum = this.data.carts.map((cart) => {
-      if (cart.goods_id === id) {
-        cart.num++;
-        return { ...cart, num: cart.num };
-      }
-      return { ...cart };
-    });
-    this.setData(
-      {
-        carts: updatedNum,
-      },
-      () => {
-        wx.setStorageSync("cart", this.data.carts);
-        this.getTotalPrice();
-      }
-    );
-  },
+  // handleIncrease(e) {
+  //   const { id } = e.currentTarget.dataset;
+  //   let updatedNum = this.data.carts.map((cart) => {
+  //     if (cart.goods_id === id) {
+  //       cart.num++;
+  //       return { ...cart, num: cart.num };
+  //     }
+  //     return { ...cart };
+  //   });
+  //   this.updateCart(updatedNum);
+  // },
   getTotalPrice() {
-    console.log(this.data.carts);
     const totalPrice = this.data.carts
       .filter((cart) => cart.checked)
       .reduce((prev, next) => {
@@ -181,12 +178,21 @@ Page({
   },
   handleItemAllCheck() {
     let checkedAll = this.data.carts.map((cart) => {
-      return { ...cart, checked: !cart.checked };
+      if (this.data.allChecked) {
+        return { ...cart, checked: false };
+      }
+      return { ...cart, checked: true };
     });
+    this.setData({
+      allChecked: !this.data.allChecked,
+    });
+    this.updateCart(checkedAll);
+  },
+  updateCart(cart) {
     this.setData(
       {
-        carts: checkedAll,
-        allChecked: !this.data.allChecked,
+        carts: cart,
+        totalNum: cart.length,
       },
       () => {
         wx.setStorageSync("cart", this.data.carts);
