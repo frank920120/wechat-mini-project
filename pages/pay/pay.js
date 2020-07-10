@@ -1,66 +1,53 @@
-// pages/pay/pay.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    isAddress: false,
+    addressDetail: null,
+    carts: [],
+    totalPrice: 0,
+    totalNum: 0,
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
+  onShow() {
+    const addressDetail = wx.getStorageSync("address");
+    const carts = wx.getStorageSync("cart") || [];
+    let checkedCarts = carts.filter((cart) => cart.checked);
+    if (addressDetail) {
+      this.setData({
+        isAddress: true,
+        addressDetail: addressDetail,
+      });
+    } else {
+      this.setData({
+        isAddress: false,
+      });
+    }
+    this.updateCart(checkedCarts);
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  getTotalNum() {
+    const totalNum = this.data.carts
+      .filter((cart) => cart.checked)
+      .reduce((prev, next) => prev + next.num, 0);
+    this.setData({
+      totalNum,
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
+  getTotalPrice() {
+    const totalPrice = this.data.carts
+      .filter((cart) => cart.checked)
+      .reduce((prev, next) => prev + next.goods_price * next.num, 0);
+    this.setData({
+      totalPrice,
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
+  updateCart(cart) {
+    this.setData(
+      {
+        carts: cart,
+      },
+      () => {
+        wx.setStorageSync("cart", this.data.carts);
+        this.getTotalPrice();
+        this.getTotalNum();
+      }
+    );
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
-})
+});
