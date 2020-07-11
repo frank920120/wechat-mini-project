@@ -50,4 +50,14 @@ Page({
       }
     );
   },
+  handleOrderPay() {
+    const token = wx.getStorageSync("token");
+    if (!token) {
+      wx.navigateTo({
+        url: "/pages/auth/auth",
+      });
+      return;
+    }
+    console.log("已经存在token");
+  },
 });
