@@ -1,3 +1,4 @@
+import { request } from "../../request/index";
 Page({
   data: {
     isAddress: false,
@@ -50,7 +51,7 @@ Page({
       }
     );
   },
-  handleOrderPay() {
+  async handleOrderPay() {
     const token = wx.getStorageSync("token");
     if (!token) {
       wx.navigateTo({
@@ -58,6 +59,22 @@ Page({
       });
       return;
     }
-    console.log("已经存在token");
+    const header = { Authorization: token };
+    const order_price = this.data.totalPrice;
+    const consignee_addr = this.data.addressDetail;
+    const goods = this.data.carts.map((cart) => {
+      return {
+        goods_id: cart.goods_id,
+        goods_number: cart.goods_number,
+        goods_price: cart.goods_price,
+      };
+    });
+    const res = await request({
+      url: "/my/orders/create",
+      method: "post",
+      data: { order_price, consignee_addr, goods },
+      header,
+    });
+    console.log(res);
   },
 });
